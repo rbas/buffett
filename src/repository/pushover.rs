@@ -33,10 +33,7 @@ impl StockEventRepository for PushOverStockEventRepository {
         ];
         match client.post(&self.api_url).form(&params).send() {
             Ok(response) => {
-                let se = StockEvent {
-                    ticker,
-                    value,
-                };
+                let se = StockEvent { ticker, value };
                 println!(
                     "Status code {}\nBody {}\n",
                     response.status(),
