@@ -9,7 +9,6 @@ pub trait TrashHoldConfRepository {
     fn get_conf_for(
         &self,
         ticker: Ticker,
-        greather_than: Currency,
-        less_than: Currency,
+        value: Currency,
     ) -> Result<Vec<TrashHoldConf>, FetchError>;
 }
