@@ -43,7 +43,7 @@ pub async fn download_data(ticker: Ticker, market_data_date: NaiveDate) -> Optio
             Ok(data) => {
                 if data.is_some() {
                     Some(MarketData {
-                        ticker: Ticker::from(ticker),
+                        ticker,
                         data: vec![data.unwrap()],
                     })
                 } else {
