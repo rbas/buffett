@@ -1,6 +1,6 @@
 use rusqlite::{params, Connection, Error};
 
-use crate::entity::{Currency, StockTrashHold, Ticker};
+use crate::entity::{StockTrashHold, Ticker};
 
 use super::{error::FetchError, StockTrashHoldRepository};
 
@@ -21,8 +21,8 @@ impl StockTrashHoldRecord {
     fn to_entity(&self) -> StockTrashHold {
         StockTrashHold {
             ticker: Ticker::from(&self.ticker),
-            greather_than: Currency::from(self.greather_than),
-            less_than: Currency::from(self.less_than),
+            greather_than: self.greather_than,
+            less_than: self.less_than,
         }
     }
 }
@@ -34,7 +34,7 @@ pub struct SqliteStockTrashHoldRepository {
 impl SqliteStockTrashHoldRepository {
     pub fn new(connection: Connection) -> Self {
         SqliteStockTrashHoldRepository {
-            connection: connection,
+            connection,
         }
     }
 }

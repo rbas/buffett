@@ -17,13 +17,11 @@ impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
         ticker: Ticker,
         value: Currency,
     ) -> Result<Vec<StockTrashHold>, FetchError> {
-        let mut entities: Vec<StockTrashHold> = Vec::new();
-
-        entities.push(StockTrashHold {
-            ticker: ticker,
+        let entities: Vec<StockTrashHold> = vec![StockTrashHold {
+            ticker,
             greather_than: value - 1.0,
             less_than: value + 2.0,
-        });
+        }];
 
         Ok(entities)
     }
@@ -31,10 +29,7 @@ impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
 
 impl StockEventRepository for DummyStockEventRepository {
     fn register_changes(&self, ticker: Ticker, value: Currency) -> Result<StockEvent, SaveError> {
-        let event = StockEvent {
-            ticker: ticker,
-            value: value,
-        };
+        let event = StockEvent { ticker, value };
 
         Ok(event)
     }

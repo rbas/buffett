@@ -20,7 +20,7 @@ pub struct DbConf {
 
 pub fn load_config(file_path: &str) -> Config {
     let config_data =
-        fs::read_to_string(file_path).expect(format!("Cannot read file `{}`. Please create configuration file from template `conf_template.toml`.", file_path).as_str());
+        fs::read_to_string(file_path).unwrap_or_else(|_| panic!("Cannot read file `{}`. Please create configuration file from template `conf_template.toml`.", file_path));
     let config: Config = toml::from_str(&config_data).unwrap();
 
     config

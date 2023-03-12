@@ -1,5 +1,5 @@
 use config::{load_config, Config};
-use entity::{Currency, Ticker};
+use entity::{Ticker};
 use repository::{
     pushover::PushOverStockEventRepository, sqlite::SqliteStockTrashHoldRepository,
     StockEventRepository, StockTrashHoldRepository,
@@ -26,9 +26,9 @@ fn build_stock_event_repository(config: &Config) -> Box<dyn StockEventRepository
 
 fn main() {
     let ticker = Ticker::from("SMSI");
-    let current_value = Currency::from(1.190);
+    let current_value = 1.190;
 
-    let config = load_config(&"./conf.toml");
+    let config = load_config("./conf.toml");
 
     let trash_hold_repository = build_trash_hold_repository(&config);
     let event_reposiotry = build_stock_event_repository(&config);
