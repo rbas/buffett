@@ -1,14 +1,28 @@
 use std::{error, fmt};
 
 #[derive(Debug, Clone)]
-pub struct FetchError {}
+pub struct FetchError {
+    message: Option<String>,
+}
+
+impl FetchError {
+    pub fn new(message: String) -> Self {
+        FetchError {
+            message: Some(message),
+        }
+    }
+}
 
 #[derive(Debug, Clone)]
 pub struct SaveError {}
 
 impl fmt::Display for FetchError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Cannot fetch data")
+        write!(
+            f,
+            "Cannot fetch data. {:#?}",
+            self.message.clone().unwrap_or(String::from(""))
+        )
     }
 }
 impl error::Error for FetchError {}

@@ -1,16 +1,18 @@
 use config::load_config;
 use entity::{Currency, Ticker};
 use repository::{
-    dummy::DummyStockTrashHoldRepository, pushover::PushOverStockEventRepository,
+    pushover::PushOverStockEventRepository, sqlite::SqliteStockTrashHoldRepository,
     StockEventRepository, StockTrashHoldRepository,
 };
+use rusqlite::Connection;
 
 mod config;
 mod entity;
 mod repository;
 
 fn main() {
-    let trash_hold_repository = DummyStockTrashHoldRepository {};
+    let connection = Connection::open("buffett.db").unwrap();
+    let trash_hold_repository = SqliteStockTrashHoldRepository::new(connection);
 
     let config = load_config(&"./conf.toml");
 
@@ -21,7 +23,7 @@ fn main() {
     );
 
     let ticker = Ticker::from("SMSI");
-    let current_value = Currency::from(135.4);
+    let current_value = Currency::from(1.200);
 
     match trash_hold_repository.get_stock_trash_hold_for(ticker, current_value) {
         Ok(entities) => {
