@@ -12,7 +12,6 @@ impl From<Error> for FetchError {
 
 #[derive(Debug)]
 struct StockTrashHoldRecord {
-    id: i32,
     ticker: String,
     greather_than: f32,
     less_than: f32,
@@ -51,17 +50,13 @@ impl StockTrashHoldRepository for SqliteStockTrashHoldRepository {
 
         let rows = statemant.query_map(params, |row| {
             Ok(StockTrashHoldRecord {
-                id: row.get(0)?,
                 ticker: row.get(1)?,
                 greather_than: row.get(2)?,
                 less_than: row.get(3)?,
             })
         })?;
 
-        let mut entities = Vec::new();
-        for record in rows {
-            entities.push(record?.to_entity());
-        }
+        let entities = rows.map(|r| r.unwrap().to_entity()).collect();
 
         Ok(entities)
     }
