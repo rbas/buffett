@@ -1,3 +1,4 @@
+use chrono::NaiveDate;
 use config::{load_config, Config};
 use entity::Ticker;
 use repository::{
@@ -6,7 +7,10 @@ use repository::{
 };
 use rusqlite::Connection;
 
+use crate::data_collector::download_data;
+
 mod config;
+mod data_collector;
 mod entity;
 mod repository;
 
@@ -24,7 +28,31 @@ fn build_stock_event_repository(config: &Config) -> Box<dyn StockEventRepository
     ))
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    env_logger::init();
+
+    let tickers = vec![
+        "0777.HK", "INFU", "0468.HK", "1126.HK", "CZO.V", "SMSI", "CE1.AX", "CEPU", "RSSS",
+        "LMN.SW", "TPCS", "PXT.TO", "CNE.TO", "AMBP", "MBR.WA",
+    ];
+    let market_data_date = NaiveDate::from_ymd_opt(2022, 12, 9).unwrap();
+
+    let mut tasks = Vec::with_capacity(tickers.len());
+
+    for ticker in tickers {
+        tasks.push(tokio::spawn(download_data(
+            Ticker::from(ticker),
+            market_data_date,
+        )));
+    }
+
+    let mut outputs = Vec::with_capacity(tasks.len());
+    for task in tasks {
+        outputs.push(task.await.unwrap());
+    }
+    println!("{:?}", outputs);
+
     let ticker = Ticker::from("SMSI");
     let current_value = 1.190;
 
