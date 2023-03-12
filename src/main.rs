@@ -69,7 +69,10 @@ async fn main() {
     };
 
     for trash_hold in &entities {
-        match event_reposiotry.register_changes(trash_hold.ticker.clone(), current_value) {
+        match event_reposiotry
+            .register_changes(trash_hold.ticker.clone(), current_value)
+            .await
+        {
             Ok(entity) => {
                 println!("{:#?}", entity);
             }

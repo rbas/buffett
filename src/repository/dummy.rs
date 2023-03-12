@@ -1,3 +1,5 @@
+use async_trait::async_trait;
+
 use crate::{
     entity::{Currency, StockEvent, StockTrashHold, Ticker},
     repository::StockTrashHoldRepository,
@@ -27,8 +29,13 @@ impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
     }
 }
 
+#[async_trait]
 impl StockEventRepository for DummyStockEventRepository {
-    fn register_changes(&self, ticker: Ticker, value: Currency) -> Result<StockEvent, SaveError> {
+    async fn register_changes(
+        &self,
+        ticker: Ticker,
+        value: Currency,
+    ) -> Result<StockEvent, SaveError> {
         let event = StockEvent { ticker, value };
 
         Ok(event)

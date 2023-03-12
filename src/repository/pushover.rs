@@ -1,3 +1,5 @@
+use async_trait::async_trait;
+
 use crate::entity::{Currency, StockEvent, Ticker};
 
 use super::{error::SaveError, StockEventRepository};
@@ -18,9 +20,14 @@ impl PushOverStockEventRepository {
     }
 }
 
+#[async_trait]
 impl StockEventRepository for PushOverStockEventRepository {
-    fn register_changes(&self, ticker: Ticker, value: Currency) -> Result<StockEvent, SaveError> {
-        let client = reqwest::blocking::Client::new();
+    async fn register_changes(
+        &self,
+        ticker: Ticker,
+        value: Currency,
+    ) -> Result<StockEvent, SaveError> {
+        let client = reqwest::Client::new();
 
         let title = format!("{} update", ticker);
         let message = format!("Ticker {} has change value to {}", ticker, value);
@@ -31,13 +38,13 @@ impl StockEventRepository for PushOverStockEventRepository {
             ("title", &title),
             ("message", &message),
         ];
-        match client.post(&self.api_url).form(&params).send() {
+        match client.post(&self.api_url).form(&params).send().await {
             Ok(response) => {
                 let se = StockEvent { ticker, value };
                 println!(
                     "Status code {}\nBody {}\n",
                     response.status(),
-                    response.text().unwrap()
+                    response.text().await.unwrap()
                 );
                 Ok(se)
             }
