@@ -1,8 +1,9 @@
 pub type Ticker = String;
-pub type Currency = u32;
+pub type Currency = f32;
 
+#[derive(Debug)]
 pub struct TrashHoldConf {
-    ticker: Ticker,
-    greather_than: Currency,
-    less_than: Currency,
+    pub ticker: Ticker,
+    pub greather_than: Currency,
+    pub less_than: Currency,
 }

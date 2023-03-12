@@ -1,6 +1,9 @@
+pub mod dummy;
+pub mod error;
+
 use crate::entity::{Currency, Ticker, TrashHoldConf};
 
-pub enum FetchError {}
+use self::error::FetchError;
 
 pub trait TrashHoldConfRepository {
     fn get_conf_for(
