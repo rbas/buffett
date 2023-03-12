@@ -1,11 +1,15 @@
 use crate::{
-    entity::{Currency, StockTrashHold, Ticker},
+    entity::{Currency, StockEvent, StockTrashHold, Ticker},
     repository::StockTrashHoldRepository,
 };
 
-use super::error::FetchError;
+use super::{
+    error::{FetchError, SaveError},
+    StockEventRepository,
+};
 
 pub struct DummyStockTrashHoldRepository {}
+pub struct DummyStockEventRepository {}
 
 impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
     fn get_stock_trash_hold_for(
@@ -22,5 +26,16 @@ impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
         });
 
         Ok(entities)
+    }
+}
+
+impl StockEventRepository for DummyStockEventRepository {
+    fn register_changes(&self, ticker: Ticker, value: Currency) -> Result<StockEvent, SaveError> {
+        let event = StockEvent {
+            ticker: ticker,
+            value: value,
+        };
+
+        Ok(event)
     }
 }
