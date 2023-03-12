@@ -1,21 +1,21 @@
 use crate::{
-    entity::{Currency, Ticker, TrashHoldConf},
-    repository::TrashHoldConfRepository,
+    entity::{Currency, StockTrashHold, Ticker},
+    repository::StockTrashHoldRepository,
 };
 
 use super::error::FetchError;
 
-pub struct DummyTrashHoldConfRepository {}
+pub struct DummyStockTrashHoldRepository {}
 
-impl TrashHoldConfRepository for DummyTrashHoldConfRepository {
+impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
     fn get_conf_for(
         &self,
         ticker: Ticker,
         value: Currency,
-    ) -> Result<Vec<TrashHoldConf>, FetchError> {
-        let mut entities: Vec<TrashHoldConf> = Vec::new();
+    ) -> Result<Vec<StockTrashHold>, FetchError> {
+        let mut entities: Vec<StockTrashHold> = Vec::new();
 
-        entities.push(TrashHoldConf {
+        entities.push(StockTrashHold {
             ticker: ticker,
             greather_than: value - 1.0,
             less_than: value + 2.0,

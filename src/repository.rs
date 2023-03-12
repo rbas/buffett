@@ -1,14 +1,14 @@
 pub mod dummy;
 pub mod error;
 
-use crate::entity::{Currency, Ticker, TrashHoldConf};
+use crate::entity::{Currency, StockTrashHold, Ticker};
 
 use self::error::FetchError;
 
-pub trait TrashHoldConfRepository {
+pub trait StockTrashHoldRepository {
     fn get_conf_for(
         &self,
         ticker: Ticker,
         value: Currency,
-    ) -> Result<Vec<TrashHoldConf>, FetchError>;
+    ) -> Result<Vec<StockTrashHold>, FetchError>;
 }
