@@ -1,5 +1,6 @@
 pub mod dummy;
 pub mod error;
+pub mod pushover;
 
 use crate::entity::{Currency, StockEvent, StockTrashHold, Ticker};
 

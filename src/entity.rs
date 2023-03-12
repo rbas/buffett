@@ -13,3 +13,9 @@ pub struct StockEvent {
     pub ticker: Ticker,
     pub value: Currency,
 }
+
+#[derive(Debug)]
+pub struct Notification {
+    pub title: String,
+    pub message: String,
+}
