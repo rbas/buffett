@@ -1,5 +1,5 @@
 use config::{load_config, Config};
-use entity::{Ticker};
+use entity::Ticker;
 use repository::{
     pushover::PushOverStockEventRepository, sqlite::SqliteStockTrashHoldRepository,
     StockEventRepository, StockTrashHoldRepository,

@@ -33,9 +33,7 @@ pub struct SqliteStockTrashHoldRepository {
 
 impl SqliteStockTrashHoldRepository {
     pub fn new(connection: Connection) -> Self {
-        SqliteStockTrashHoldRepository {
-            connection,
-        }
+        SqliteStockTrashHoldRepository { connection }
     }
 }
 
