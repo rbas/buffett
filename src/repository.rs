@@ -1,6 +1,7 @@
 pub mod dummy;
 pub mod error;
 pub mod pushover;
+pub mod sqlite;
 
 use crate::entity::{Currency, StockEvent, StockTrashHold, Ticker};
 
