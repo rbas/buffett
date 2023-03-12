@@ -7,3 +7,9 @@ pub struct StockTrashHold {
     pub greather_than: Currency,
     pub less_than: Currency,
 }
+
+#[derive(Debug)]
+pub struct StockEvent {
+    pub ticker: Ticker,
+    pub value: Currency,
+}
