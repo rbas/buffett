@@ -8,7 +8,7 @@ use super::error::FetchError;
 pub struct DummyStockTrashHoldRepository {}
 
 impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
-    fn get_conf_for(
+    fn get_stock_trash_hold_for(
         &self,
         ticker: Ticker,
         value: Currency,
