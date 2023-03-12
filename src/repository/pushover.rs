@@ -11,9 +11,9 @@ pub struct PushOverStockEventRepository {
 impl PushOverStockEventRepository {
     pub fn new(api_url: String, app_token: String, delivery_group_token: String) -> Self {
         PushOverStockEventRepository {
-            api_url: api_url,
-            app_token: app_token,
-            delivery_group_token: delivery_group_token,
+            api_url,
+            app_token,
+            delivery_group_token,
         }
     }
 }
@@ -34,8 +34,8 @@ impl StockEventRepository for PushOverStockEventRepository {
         match client.post(&self.api_url).form(&params).send() {
             Ok(response) => {
                 let se = StockEvent {
-                    ticker: ticker,
-                    value: value,
+                    ticker,
+                    value,
                 };
                 println!(
                     "Status code {}\nBody {}\n",
