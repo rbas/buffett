@@ -1,4 +1,5 @@
-use rusqlite::{params, Connection, Error};
+use async_trait::async_trait;
+use sqlx::{Error, SqlitePool};
 
 use crate::entity::{StockTrashHold, Ticker};
 
@@ -10,8 +11,9 @@ impl From<Error> for FetchError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, sqlx::FromRow)]
 struct StockTrashHoldRecord {
+    id: i64,
     ticker: String,
     greather_than: f32,
     less_than: f32,
@@ -28,33 +30,37 @@ impl StockTrashHoldRecord {
 }
 
 pub struct SqliteStockTrashHoldRepository {
-    connection: Connection,
+    connection: SqlitePool,
 }
 
 impl SqliteStockTrashHoldRepository {
-    pub fn new(connection: Connection) -> Self {
+    pub fn new(connection: SqlitePool) -> Self {
         SqliteStockTrashHoldRepository { connection }
     }
 }
 
+#[async_trait]
 impl StockTrashHoldRepository for SqliteStockTrashHoldRepository {
-    fn get_stock_trash_hold_for(
+    async fn get_stock_trash_hold_for(
         &self,
         ticker: crate::entity::Ticker,
         value: crate::entity::Currency,
     ) -> Result<Vec<crate::entity::StockTrashHold>, super::error::FetchError> {
-        let params = params![ticker, value, value];
-        let mut statemant = self.connection.prepare("SELECT id, ticker, greather_than, less_than FROM stock_trash_hold WHERE ticker=?1 AND (greather_than < ?2) or (less_than > ?3)")?;
+        let mut conn = self.connection.acquire().await?;
 
-        let rows = statemant.query_map(params, |row| {
-            Ok(StockTrashHoldRecord {
-                ticker: row.get(1)?,
-                greather_than: row.get(2)?,
-                less_than: row.get(3)?,
-            })
-        })?;
+        let stream = sqlx::query_as::<_, StockTrashHoldRecord>(
+            "SELECT id, ticker, greather_than, less_than 
+                FROM stock_trash_hold 
+                WHERE ticker=? 
+                AND (greather_than < ?) or (less_than > ?)",
+        )
+        .bind(ticker)
+        .bind(value)
+        .bind(value)
+        .fetch_all(&mut conn)
+        .await?;
 
-        let entities = rows.map(|r| r.unwrap().to_entity()).collect();
+        let entities = stream.iter().map(|r| r.to_entity()).collect();
 
         Ok(entities)
     }
