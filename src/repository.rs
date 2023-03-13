@@ -9,8 +9,9 @@ use crate::entity::{Currency, StockEvent, StockTrashHold, Ticker};
 
 use self::error::{FetchError, SaveError};
 
+#[async_trait]
 pub trait StockTrashHoldRepository {
-    fn get_stock_trash_hold_for(
+    async fn get_stock_trash_hold_for(
         &self,
         ticker: Ticker,
         value: Currency,

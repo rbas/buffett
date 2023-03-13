@@ -5,7 +5,7 @@ use repository::{
     pushover::PushOverStockEventRepository, sqlite::SqliteStockTrashHoldRepository,
     StockEventRepository, StockTrashHoldRepository,
 };
-use rusqlite::Connection;
+use sqlx::SqlitePool;
 
 use crate::data_collector::download_data;
 
@@ -14,10 +14,12 @@ mod data_collector;
 mod entity;
 mod repository;
 
-fn build_trash_hold_repository(config: &Config) -> Box<dyn StockTrashHoldRepository> {
-    let connection = Connection::open(&config.db.path).unwrap();
+async fn build_trash_hold_repository(
+    config: &Config,
+) -> Result<impl StockTrashHoldRepository, sqlx::Error> {
+    let connection = SqlitePool::connect(&config.db.path).await?;
 
-    Box::new(SqliteStockTrashHoldRepository::new(connection))
+    Ok(SqliteStockTrashHoldRepository::new(connection))
 }
 
 fn build_stock_event_repository(config: &Config) -> Box<dyn StockEventRepository> {
@@ -58,10 +60,13 @@ async fn main() {
 
     let config = load_config("./conf.toml");
 
-    let trash_hold_repository = build_trash_hold_repository(&config);
+    let trash_hold_repository = build_trash_hold_repository(&config).await.unwrap();
     let event_reposiotry = build_stock_event_repository(&config);
 
-    let entities = match trash_hold_repository.get_stock_trash_hold_for(ticker, current_value) {
+    let entities = match trash_hold_repository
+        .get_stock_trash_hold_for(ticker, current_value)
+        .await
+    {
         Ok(entities) => entities,
         Err(error) => {
             panic!("{:#?}", error)

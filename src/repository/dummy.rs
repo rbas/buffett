@@ -13,8 +13,9 @@ use super::{
 pub struct DummyStockTrashHoldRepository {}
 pub struct DummyStockEventRepository {}
 
+#[async_trait]
 impl StockTrashHoldRepository for DummyStockTrashHoldRepository {
-    fn get_stock_trash_hold_for(
+    async fn get_stock_trash_hold_for(
         &self,
         ticker: Ticker,
         value: Currency,
