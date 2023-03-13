@@ -2,3 +2,4 @@
 /conf.toml
 /test.http
 /buffett.db
+/.env

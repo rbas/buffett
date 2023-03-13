@@ -22,12 +22,12 @@ async fn build_trash_hold_repository(
     Ok(SqliteStockTrashHoldRepository::new(connection))
 }
 
-fn build_stock_event_repository(config: &Config) -> Box<dyn StockEventRepository> {
-    Box::new(PushOverStockEventRepository::new(
+fn build_stock_event_repository(config: &Config) -> impl StockEventRepository {
+    PushOverStockEventRepository::new(
         config.pushover.api_url.to_owned(),
         config.pushover.app_token.to_owned(),
         config.pushover.delivery_group_token.to_owned(),
-    ))
+    )
 }
 
 #[tokio::main]
